@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+@using BlazorLoginSocial.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityRedirectManager RedirectManager
+
+@if (externalLogins.Length == 0)
+{
+    <div>
+        <p>
+            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                article
+                about setting up this ASP.NET application to support logging in via external services
+            </a>.
+        </p>
+    </div>
+    <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button>
+    <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
+    <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+    <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
+}
+else
+{
+    <form class="form-horizontal" action="Account/PerformExternalLogin" method="post">
+        <div>
+           <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+            <p>
+                @foreach (var provider in externalLogins)
+                {
+                    if (provider.Name.Equals("microsoft", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        <button type="submit" class="btn btn-info btn-icon waves-effect waves-light mx-1" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="ri-microsoft-fill fs-16"></i></button>
+                    }
+                    else if (provider.Name.Equals("google", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        <button type="submit" class="btn btn-danger btn-icon waves-effect waves-light mx-1" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="ri-google-fill fs-16"></i></button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    }
+                }
+
+            </p>
+        </div>
+    </form>
+}
+
+@code {
+    private AuthenticationScheme[] externalLogins = [];
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
+    }
+}
