@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLoginSocial", "Blazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLoginSocial.Client", "BlazorLoginSocial\BlazorLoginSocial.Client\BlazorLoginSocial.Client.csproj", "{EE07FA1D-3DF8-4C40-97B3-63F6E07A0753}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLoginSocial.Domain", "BlazorLoginSocial.Domain\BlazorLoginSocial.Domain.csproj", "{E19EA801-B415-4172-BA0D-EBF844739AEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EE07FA1D-3DF8-4C40-97B3-63F6E07A0753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE07FA1D-3DF8-4C40-97B3-63F6E07A0753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE07FA1D-3DF8-4C40-97B3-63F6E07A0753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19EA801-B415-4172-BA0D-EBF844739AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19EA801-B415-4172-BA0D-EBF844739AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19EA801-B415-4172-BA0D-EBF844739AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19EA801-B415-4172-BA0D-EBF844739AEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

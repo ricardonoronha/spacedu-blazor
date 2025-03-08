@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BlazorLoginSocial.Domain\BlazorLoginSocial.Domain.csproj" />
     <ProjectReference Include="..\BlazorLoginSocial.Client\BlazorLoginSocial.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.13" />
