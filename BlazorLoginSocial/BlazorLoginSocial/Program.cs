@@ -3,6 +3,7 @@ using BlazorLoginSocial.Components;
 using BlazorLoginSocial.Components.Account;
 using BlazorLoginSocial.Data;
 using BlazorLoginSocial.Data.Repositories;
+using BlazorLoginSocial.Domain.Dtos;
 using BlazorLoginSocial.Domain.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,8 @@ builder.Services.AddAuthentication(options =>
         options.ClientId = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientId")!;
         options.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientSecret")!;
     })
-    .AddGoogle(options=> {
+    .AddGoogle(options =>
+    {
         options.ClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId")!;
         options.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret")!;
     })
@@ -81,5 +83,13 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapGet("/customers", async ([AsParameters] CustomerSearchDto search, ICustomerRepository customerRepository, CancellationToken cancellationToken) =>
+{
+    var result = await customerRepository.SearchAsync(search, cancellationToken);
+    return Results.Ok(result);
+});
+
+
 
 app.Run();

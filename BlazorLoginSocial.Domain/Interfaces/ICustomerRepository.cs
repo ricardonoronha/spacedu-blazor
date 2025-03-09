@@ -5,5 +5,5 @@ namespace BlazorLoginSocial.Domain.Interfaces;
 
 public interface ICustomerRepository
 {
-    Task<PaginatedList<Customer>> SearchAsync(PaginatedSearchDto<CustomerSearchDto> search, CancellationToken cancellationToken);
+    Task<PaginatedList<Customer>> SearchAsync(CustomerSearchDto search, CancellationToken cancellationToken);
 }

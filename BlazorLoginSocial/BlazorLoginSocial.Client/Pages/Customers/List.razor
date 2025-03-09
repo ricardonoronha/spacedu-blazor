@@ -1,6 +1,6 @@
 ﻿@page "/Customers/List"
 
-@rendermode InteractiveServer
+@rendermode InteractiveAuto
 @inject NavigationManager NavigationManager
 @inject ICustomerRepository CustomerRepository
 
@@ -87,7 +87,7 @@
                 <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
                     <div class="col-sm">
                         <div class="text-muted">
-                            Mostrando página <span class="fw-semibold">@PaginatedList.PageIndex.ToString("00")</span> de <span class="fw-semibold">@PaginatedList.TotalPages.ToString("00")</span> Results
+                            Total de registros <span class="fw-semibold">@PaginatedList.TotalItems.ToString("00")</span> encontrados na pesquisa.
                         </div>
                     </div>
                     <div class="col-sm-auto  mt-3 mt-sm-0">
@@ -96,7 +96,7 @@
                             <li class="page-item @(PaginatedList.HasPreviousPage ? "" : "disabled" )">
                                 <button @onclick="()=> NavigateToPage(PaginatedList.PageIndex - 1)" class="page-link">←</button>
                             </li>
-                          
+
                             @foreach (var nearPage in PaginatedList.GetVisiblePages())
                             {
                                 int pageNumber = nearPage;
@@ -142,9 +142,7 @@
         if (PageSize == 0)
             PageSize = 15;
 
-        var search = new PaginatedSearchDto<CustomerSearchDto>(new(SearchWord), PageIndex, PageSize);
-        PaginatedList = await CustomerRepository.SearchAsync(search, CancellationToken.None);
-
+        PaginatedList = await CustomerRepository.SearchAsync(new(SearchWord, PageIndex, PageSize), CancellationToken.None);
     }
 
     private void NavigateToPage(int pageNumber)
