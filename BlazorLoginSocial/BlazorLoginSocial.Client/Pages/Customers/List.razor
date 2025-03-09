@@ -1,69 +1,83 @@
 ﻿@page "/Customers/List"
-@using BlazorLoginSocial.Domain.Entities
-<!-- Striped Rows -->
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject ICustomerRepository CustomerRepository
+
 <div class="col-xl-12">
     <div class="card">
         <div class="card-header align-items-center d-flex">
             <h4 class="card-title mb-0 flex-grow-1">Lista de Clientes</h4>
         </div>
 
+        <form @onsubmit="OnSearch">
+            <div class="input-group p-2">
+                <InputText @bind-Value="SearchWord" type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" />
+                <button class="btn btn-outline-info material-shadow-none" type="submit" id="button-addon2">Pesquisar</button>
+            </div>
+        </form>
+
+
         <div class="card-body">
+
             <div class="table-responsive table-card">
                 <table class="table table-hover table-centered align-middle table-nowrap mb-0">
                     <thead>
                         <tr>
-
-
-                            <th scope="col">Nome</th>
+                            <th scope="col">Nome @SearchWord</th>
                             <th scope="col">Cidade</th>
                             <th scope="col"></th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var customer in _customers)
+                        @if(PaginatedList is not null)
                         {
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-sm bg-light rounded p-1 me-2">
-                                            <img src="@customer.ImageUrl" alt="" class="img-fluid d-block">
-                                        </div>
-                                        <div>
-                                            <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">@customer.Name</a></h5>
-                                            <span class="text-muted">FEBRABAN: @customer.Febraban</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <h5 class="fs-14 my-1 fw-normal">@customer.TownName - @customer.State</h5>
-                                </td>
-
-                                <td>
-                                    <div class="fs-14 my-1 fw-normal">
-                                        <div class="hstack flex-wrap">
-                                            <div class="select mx-1">
-                                                <button class="btn btn-sm btn-soft-info edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
-                                                    <i class=" ri-arrow-right-circle-line"></i> Selecionar
-                                                </button>
+                            @foreach (var customer in PaginatedList.Data)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                <img src="@customer.ImageUrl" alt="" class="img-fluid d-block">
                                             </div>
-
-                                            <div class="edit mx-1">
-                                                <button class="btn btn-sm btn-soft-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
-                                                    <i class="ri-edit-2-line"></i> Editar
-                                                </button>
-                                            </div>
-
-                                            <div class="edit mx-1">
-                                                <button class="btn btn-sm btn-soft-danger edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
-                                                    <i class="ri-edit-2-line"></i> Deletar
-                                                </button>
+                                            <div>
+                                                <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset">@customer.Name</a></h5>
+                                                <span class="text-muted">FEBRABAN: @customer.Febraban</span>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <h5 class="fs-14 my-1 fw-normal">@customer.TownName - @customer.State</h5>
+                                    </td>
+
+                                    <td>
+                                        <div class="fs-14 my-1 fw-normal">
+                                            <div class="hstack flex-wrap">
+                                                <div class="select m-1">
+                                                    <button class="btn btn-sm btn-soft-info edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
+                                                        <i class=" ri-arrow-right-circle-line"></i> Selecionar
+                                                    </button>
+                                                </div>
+
+                                                <div class="edit m-1">
+                                                    <button class="btn btn-sm btn-soft-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
+                                                        <i class="ri-edit-2-line"></i> Editar
+                                                    </button>
+                                                </div>
+
+                                                <div class="edit m-1">
+                                                    <button class="btn btn-sm btn-soft-danger edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
+                                                        <i class="ri-edit-2-line"></i> Deletar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         }
+                        
                     </tbody>
                 </table>
             </div>
@@ -100,10 +114,27 @@
 </div>
 
 @code {
-    private IEnumerable<Customer> _customers = Array.Empty<Customer>();
+    [SupplyParameterFromQuery]
+    private string SearchWord { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery]
+    private int PageIndex { get; set; } = 1;
+
+    [SupplyParameterFromQuery]
+    private int PageSize { get; set; } = 15;
+
+    private PaginatedList<Customer>? PaginatedList = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var search = new PaginatedSearchDto<CustomerSearchDto>(new(SearchWord), PageIndex, PageSize);
+        PaginatedList = await CustomerRepository.SearchAsync(search, CancellationToken.None);
+
+    }
 
     protected override void OnInitialized()
     {
+        /*
         _customers = new List<Customer>()
         {
             new(){
@@ -131,6 +162,12 @@
                 Febraban = "1427"
             },
         };
+        */
+    }
+
+    private void OnSearch()
+    {
+        NavigationManager.NavigateTo($"/Customers/List?SearchWord={SearchWord}");
     }
 
 
