@@ -20,7 +20,7 @@ namespace BlazorLoginSocial.Domain.Dtos
 
             for (int i = PageIndex - 2; i <= TotalPages; i++)
             {
-                if (i < 0) continue;
+                if (i <= 0) continue;
 
                 nearPages.Add(i);
 
@@ -29,5 +29,9 @@ namespace BlazorLoginSocial.Domain.Dtos
 
             return [.. nearPages];
         }
+
+        public bool HasPreviousPage => PageIndex > 1;
+
+        public bool HasNextPage => PageIndex < TotalPages;
     }
 }

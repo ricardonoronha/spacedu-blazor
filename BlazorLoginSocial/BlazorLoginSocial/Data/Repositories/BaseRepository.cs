@@ -11,7 +11,7 @@ public abstract class BaseRepository<TFilter, TResult>
 
         int totalItems = await query.CountAsync(cancellationToken);
 
-        int pageSize = search.PageSize == 0 ? 1 : search.PageSize;
+        int pageSize = search.PageSize <= 0 ? 1 : search.PageSize;
 
         int pageIndex = search.PageIndex <= 0 ? 1 : search.PageIndex;
 
