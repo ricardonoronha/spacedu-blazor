@@ -1,0 +1,47 @@
+﻿@using BlazorLoginSocial.Domain.Entities
+@inject CurrentCustomerState CurrentCustomerState
+@inject ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
+@if (hasCustomerSelected)
+{
+    <NavLink href="Customers/List">
+        <div class="p-4 s">
+            <strong>@customer!.TownName</strong>
+            <br />
+            <small class="fs-10">FEBRABAN: @customer!.Febraban</small>
+        </div>
+    </NavLink>
+  
+}
+
+
+@code {
+    private bool hasCustomerSelected = false;
+    private Customer? customer;
+
+
+
+    protected override void OnInitialized()
+    {
+        CurrentCustomerState.CustomerSelected += OnCustomerSelected;
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        OnCustomerSelected();
+        return Task.CompletedTask;
+    }
+
+    public async void OnCustomerSelected()
+    {
+        hasCustomerSelected = await CurrentCustomerState.ExistsCurrentCustomerAsync(LocalStorage);
+        customer = await CurrentCustomerState.GetCurrentCustomerAsync(LocalStorage);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        CurrentCustomerState.CustomerSelected -= OnCustomerSelected;
+    }
+}

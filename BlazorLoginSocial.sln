@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLoginSocial", "Blazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLoginSocial.Client", "BlazorLoginSocial\BlazorLoginSocial.Client\BlazorLoginSocial.Client.csproj", "{EE07FA1D-3DF8-4C40-97B3-63F6E07A0753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLoginSocial.Domain", "BlazorLoginSocial.Domain\BlazorLoginSocial.Domain.csproj", "{E19EA801-B415-4172-BA0D-EBF844739AEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLoginSocial.Domain", "BlazorLoginSocial.Domain\BlazorLoginSocial.Domain.csproj", "{E19EA801-B415-4172-BA0D-EBF844739AEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

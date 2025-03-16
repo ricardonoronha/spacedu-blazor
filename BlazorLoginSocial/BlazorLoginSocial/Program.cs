@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using BlazorLoginSocial.Client.Pages;
+using BlazorLoginSocial.Client.States;
 using BlazorLoginSocial.Components;
 using BlazorLoginSocial.Components.Account;
 using BlazorLoginSocial.Data;
@@ -54,9 +56,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddScoped<CurrentCustomerState>();
+
 
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

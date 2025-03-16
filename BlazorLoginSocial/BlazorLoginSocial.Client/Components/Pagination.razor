@@ -1,0 +1,47 @@
+﻿@typeparam TData
+
+@if (PaginatedList is null)
+{
+    return;
+}
+
+<div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
+    <div class="col-sm">
+        <div class="text-muted">
+            Total de registros <span class="fw-semibold">@PaginatedList.TotalItems.ToString("00")</span> encontrados na pesquisa.
+        </div>
+    </div>
+    <div class="col-sm-auto  mt-3 mt-sm-0">
+        <ul class="pagination pagination-separated pagination-sm mb-0 justify-content-center">
+
+            <li class="page-item @(PaginatedList.HasPreviousPage ? "" : "disabled" )">
+                <button @onclick="()=> NavigateToPage.InvokeAsync(PaginatedList.PageIndex - 1)" class="page-link">←</button>
+            </li>
+
+            @foreach (var nearPage in PaginatedList.GetVisiblePages())
+            {
+                int pageNumber = nearPage;
+                string activeClass = pageNumber == PaginatedList.PageIndex ? "active" : "";
+
+                <li class="page-item @activeClass">
+                    <button @onclick="()=> NavigateToPage.InvokeAsync(pageNumber)" class="page-link">@pageNumber</button>
+                </li>
+            }
+
+            <li class="page-item @(PaginatedList.HasNextPage ? "" : "disabled")">
+                <button @onclick="()=> NavigateToPage.InvokeAsync(PaginatedList.PageIndex + 1)" class="page-link">→</button>
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public PaginatedList<TData>? PaginatedList { get; set; }
+
+    [Parameter]
+    public EventCallback<int> NavigateToPage { get; set; }
+}
