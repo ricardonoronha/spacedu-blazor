@@ -13,7 +13,6 @@ public class Customer
     public string TownName { get; set; } = string.Empty;
     public string State { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
-
     public string Febraban { get; set; } = string.Empty;
 
 }

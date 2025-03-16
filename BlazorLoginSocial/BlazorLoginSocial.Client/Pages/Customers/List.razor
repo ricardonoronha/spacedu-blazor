@@ -6,6 +6,7 @@
 @inject ICustomerRepository CustomerRepository
 @inject ILocalStorageService LocalStorage
 @inject CurrentCustomerState CurrentCustomerState
+@inject NavigationManager NavigationManager
 
 <div class="col-xl-12">
     <div class="card">
@@ -17,7 +18,10 @@
             <div class="input-group p-2">
                 <InputText @bind-Value="SearchWord" type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" />
                 <button class="btn btn-outline-info material-shadow-none" type="submit" id="button-addon2">Pesquisar</button>
+                <button class="btn btn-outline-info material-shadow-none" id="button-addon2" type="button" @onclick="()=> NavigateToAdd()">Novo</button>
+
             </div>
+            
         </form>
 
         <div class="card-body">
@@ -25,7 +29,7 @@
                 <table class="table table-hover table-centered align-middle table-nowrap mb-0">
                     <thead>
                         <tr>
-                            <th scope="col">Nome @SearchWord</th>
+                            <th scope="col">Nome</th>
                             <th scope="col">Cidade</th>
                             <th scope="col"></th>
 
@@ -62,7 +66,7 @@
                                                 </div>
 
                                                 <div class="edit m-1">
-                                                    <button class="btn btn-sm btn-soft-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">
+                                                    <button class="btn btn-sm btn-soft-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal" @onclick="()=> EditCustomer(customer)">
                                                         <i class="ri-edit-2-line"></i> Editar
                                                     </button>
                                                 </div>
@@ -99,6 +103,9 @@
 
     private PaginatedList<Customer>? PaginatedList = null;
 
+    public void EditCustomer(Customer customer)
+        => NavigationManager.NavigateTo($"Customers/Edit/{customer.Id}?BackUrl={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+
     protected override async Task OnParametersSetAsync()
     {
         if (PageIndex == 0)
@@ -114,6 +121,9 @@
     {
         NavigationManager.NavigateTo($"/Customers/List?SearchWord={SearchWord}&PageIndex={pageNumber}&PageSize={PageSize}");
     }
+
+    private void NavigateToAdd()
+        => NavigationManager.NavigateTo($"/Customers/Add?BackUrl={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
 
 
     private async Task OnCustomerSelected(Customer customer)

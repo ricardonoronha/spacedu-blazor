@@ -1,0 +1,9 @@
+﻿@page "/Customers/Add"
+
+<CustomerEditForm BackUrl="@BackUrl" />
+
+@code {
+    [SupplyParameterFromQuery]
+    public string BackUrl { get; set; } = string.Empty;
+
+}

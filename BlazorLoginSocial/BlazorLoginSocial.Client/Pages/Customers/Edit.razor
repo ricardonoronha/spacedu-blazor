@@ -1,0 +1,12 @@
+﻿@page "/Customers/Edit/{id:guid}"
+
+<CustomerEditForm Id="@Id" BackUrl="@BackUrl" />
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string BackUrl { get; set; } = string.Empty;
+
+}

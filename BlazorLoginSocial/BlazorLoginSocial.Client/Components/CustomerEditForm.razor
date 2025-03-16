@@ -1,0 +1,204 @@
+﻿@rendermode InteractiveServer
+@inject ICustomerRepository CustomerRepository
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Input" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="card">
+        <div class="card-header align-items-center d-flex">
+            <h4 class="card-title mb-0 flex-grow-1">Cadastro de Clientes</h4>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-5 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <InputText class="form-control" id="txtNome" placeholder="Digite o nome da entidade" @bind-Value="Input.Name" />
+                        <label for="firstnamefloatingInput">Nome</label>
+
+
+
+                    </div>
+                    <ValidationMessage For="()=> Input.Name" class="text-danger small m-1" />
+                </div>
+                <div class="col-md-2 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <InputText type="text" class="form-control" id="txtFebraban" placeholder="Digite o código FEBRABAN" @bind-Value="Input.Febraban" />
+                        <label for="txtFebraban">FEBRABAN</label>
+                    </div>
+                    <ValidationMessage For="()=> Input.Febraban" class="text-danger small m-1" />
+                </div>
+                <div class="col-md-3 col-sm-12 mb-3">
+
+                    <div class="form-floating">
+                        <InputText class="form-control" id="txtCidade" placeholder="Enter your firstname" @bind-Value="Input.TownName" />
+                        <label for="txtCidade">Cidade</label>
+                    </div>
+                    <ValidationMessage For="()=> Input.TownName" class="text-danger small m-1" />
+                </div>
+                <div class="col-md-2 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <InputSelect class="form-select" id="estado" aria-label="Selecione um estado" @bind-Value="Input.State">
+                            <option value="">Selecione...</option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </InputSelect>
+                        <label for="estado">Estado</label>
+                    </div>
+                    <ValidationMessage For="()=> Input.State" class="text-danger small m-1" />
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <InputText type="text" class="form-control" id="firstnamefloatingInput" placeholder="Enter your firstname" @bind-Value="Input.ImageUrl" />
+                        <label for="firstnamefloatingInput">URL Logo</label>
+                    </div>
+                    <ValidationMessage For="()=> Input.ImageUrl" class="text-danger small m-1" />
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-footer">
+
+            <div class="d-flex justify-content-end">
+
+                <button type="submit" class="btn btn-primary btn-load p-2 @(IsLoading ? "disabled" : "")" @onclick="Submit">
+                    <span class="d-flex align-items-center">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border flex-shrink-0" role="status">
+                                <span class="visually-hidden">Carregando</span>
+                            </span>
+                        }
+                        <span class="flex-grow-1 ms-2">
+                            &nbsp&nbsp
+                            Salvar
+                            &nbsp&nbsp&nbsp&nbsp
+                        </span>
+                    </span>
+                </button>
+
+                <button class="btn btn-outline-secondary btn-load mx-2 @(IsLoading ?  "disabled" : "")" @onclick="NavigateToCustomerList">
+                    <span class="d-flex align-items-center">
+                        @if (IsLoading)
+                        {
+                            <span class="spinner-border flex-shrink-0" role="status">
+                                <span class="visually-hidden">Carregando</span>
+                            </span>
+
+                        }
+                        <span class="flex-grow-1 ms-2">
+                            &nbsp&nbsp
+                            Cancelar
+                            &nbsp&nbsp&nbsp&nbsp
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+
+@code {
+    [Parameter]
+    public string BackUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public Guid Id { get; set; } = Guid.Empty;
+
+    public bool IsAdding => Id == Guid.Empty;
+
+    public void NavigateToCustomerList()
+      => NavigationManager.NavigateTo(string.IsNullOrWhiteSpace(BackUrl) ? "/Customers/List" : BackUrl);
+
+    public string Estado { get; set; } = "";
+
+    public bool IsLoading { get; set; } = false;
+
+    public CustomerInsertOrUpdateCommand Input { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsAdding)
+            return;
+
+        var customer = await CustomerRepository.GetByIdAsync(Id);
+
+        if (customer is null)
+        {
+            NavigateToCustomerList();
+            return;
+        }
+
+        Input = new()
+            {
+                Febraban = customer.Febraban,
+                Id = customer.Id,
+                ImageUrl = customer.ImageUrl,
+                Name = customer.Name,
+                State = customer.State,
+                TownName = customer.TownName
+
+            };
+
+        StateHasChanged();
+    }
+
+    public async Task Submit()
+    {
+        if (IsLoading)
+            return;
+
+        IsLoading = true;
+
+        StateHasChanged();
+
+        await Task.Delay(2000);
+
+        try
+        {
+            await CustomerRepository.InsertOrUpdateAsync(Input);
+        }
+        catch (Exception)
+        { }
+        finally
+        {
+            IsLoading = false;
+        }
+
+        NavigateToCustomerList();
+    }
+}
